@@ -7,6 +7,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.container.AsyncResponse;
 import javax.ws.rs.container.Suspended;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import org.glassfish.jersey.server.ManagedAsync;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +18,7 @@ import br.comar.ricardo.stuff.boot.hystrix.service.NIOServices;
 
 @Path("/nio")
 @Produces(MediaType.APPLICATION_JSON)
-public class NIOConsumer {
+public class NIOAPI {
 
 	@Autowired
 	NIOServices service;
@@ -28,8 +30,16 @@ public class NIOConsumer {
 			@PathParam("max") Integer max,
 			@Suspended final AsyncResponse asyncResponse) {
 
-		NIOResponse resp = service.getResponse(min, max);
-		asyncResponse.resume(resp);
+		NIOResponse serviceResp = service.getResponse(min, max);
+		
+		Response response;
+		if (serviceResp.getExpensiveTime() > 0) {
+			response = Response.ok(serviceResp).build(); 
+		} else {
+			response = Response.status(Status.INTERNAL_SERVER_ERROR).build();
+		}
+		
+		asyncResponse.resume(response);
 	}
 
 }
