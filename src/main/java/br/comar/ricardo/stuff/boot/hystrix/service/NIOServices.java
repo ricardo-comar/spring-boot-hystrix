@@ -8,10 +8,10 @@ import br.comar.ricardo.stuff.boot.hystrix.pojo.NIOResponse;
 @Component
 public class NIOServices {
 
-	public NIOResponse getResponse() {
+	public NIOResponse getResponse(Integer min, Integer max) {
 		RestTemplate restTemplate = new RestTemplate();
 		NIOResponse resp = restTemplate.getForObject(
-				"http://localhost:8080/nio/async?minMs=500&maxMs=1000", NIOResponse.class);
+				"http://localhost:8080/nio/async?minMs=" + min + "&maxMs=" + max, NIOResponse.class);
 
 		return resp;
 	}
