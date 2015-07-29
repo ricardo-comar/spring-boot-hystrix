@@ -16,6 +16,7 @@ Created using Spring Boot, with Maven 3, Spring Batch and [Actuator](http://docs
 - An instance will be online in a few seconds. 
 - Every time you call the API, it will handle the request and call the same service from [NIO API](http://localhost:8080/api/nio/async) passing on the same parameters, to emulate a call to the service.
 - By default, [Hystrix](https://github.com/Netflix/Hystrix) has a configured timeout to 1s. If the NIO API takes longer than 1s to respond, the circuit breaks the call and returns the fallback response.  
+- You can also access the [Hystrix Dashboard](http://localhost:8090/hystrix), informing the stream as `http://localhost:8090/hystrix.stream`, delay and title.
 
 ### Under the hood
 - TODO
