@@ -24,7 +24,7 @@ public class NIOAPI {
 	NIOServices service;
 
 	@GET
-	@Path("/{min}/{max}")
+	@Path("/async/{min}/{max}")
 	@ManagedAsync
 	public void asyncNIO(@PathParam("min") Integer min,
 			@PathParam("max") Integer max,
@@ -41,5 +41,24 @@ public class NIOAPI {
 		
 		asyncResponse.resume(response);
 	}
+	
+
+	@GET
+	@Path("/sync/{min}/{max}")
+	public Response syncNIO(@PathParam("min") Integer min,
+			@PathParam("max") Integer max) {
+
+		NIOResponse serviceResp = service.getResponse(min, max);
+		
+		Response response;
+		if (serviceResp.getExpensiveTime() > 0) {
+			response = Response.ok(serviceResp).build(); 
+		} else {
+			response = Response.status(Status.INTERNAL_SERVER_ERROR).build();
+		}
+		
+		return response;
+	}
+
 
 }
